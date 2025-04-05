@@ -6,7 +6,8 @@ import { TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 export default function Preference() {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedGroupSize, setSelectedGroupSize] = useState(0);
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [selectedButtons, setSelectedButtons] = useState<string[]>([]);
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -21,12 +22,12 @@ export default function Preference() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>When are you free?</Text>
+        <Text style={styles.title}>How many players?</Text>
         <SegmentedControl
-          values={['Everyday', 'Weekday', 'Weekends']}
-          selectedIndex={selectedIndex}
+          values={['2 players', '4 players']}
+          selectedIndex={selectedGroupSize}
           onChange={(event) => {
-            setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
+            setSelectedGroupSize(event.nativeEvent.selectedSegmentIndex);
           }}
           style={styles.segmentedControl}
           backgroundColor="#2A2A2A"
@@ -36,27 +37,45 @@ export default function Preference() {
         />
       </View>
       <View style={styles.content}>
-        <Text style={styles.subtitle}>Pick a time</Text>
-        <View style={[styles.buttonContainer, { paddingBottom: tabBarHeight }]}>
-          {['Dusk', 'Morning', 'Afternoon', 'Evening'].map((label, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.chip,
-                selectedButtons.includes(label) && styles.selectedChip,
-              ]}
-              onPress={() => toggleButtonSelection(label)}
-            >
-              <Text
+        <View style={styles.section}>
+          <Text style={styles.subtitle}>What days work?</Text>
+          <SegmentedControl
+            values={['Everyday', 'Weekday', 'Weekends']}
+            selectedIndex={selectedDayIndex}
+            onChange={(event) => {
+              setSelectedDayIndex(event.nativeEvent.selectedSegmentIndex);
+            }}
+            style={styles.segmentedControl}
+            backgroundColor="#2A2A2A"
+            tintColor={Colors.dark.tint}
+            fontStyle={{ color: '#FFFFFF' }}
+            activeFontStyle={{ color: '#000000' }}
+          />
+        </View>
+        
+        <View style={[styles.section, { paddingBottom: tabBarHeight }]}>
+          <Text style={styles.subtitle}>What time of day?</Text>
+          <View style={styles.buttonContainer}>
+            {['Dusk', 'Morning', 'Afternoon', 'Evening'].map((label, index) => (
+              <TouchableOpacity
+                key={index}
                 style={[
-                  styles.chipText,
-                  selectedButtons.includes(label) && styles.selectedChipText,
+                  styles.chip,
+                  selectedButtons.includes(label) && styles.selectedChip,
                 ]}
+                onPress={() => toggleButtonSelection(label)}
               >
-                {label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  style={[
+                    styles.chipText,
+                    selectedButtons.includes(label) && styles.selectedChipText,
+                  ]}
+                >
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -86,16 +105,18 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 32,
   },
+  section: {
+    paddingHorizontal: 16,
+    marginBottom: 32,
+  },
   subtitle: {
     fontSize: 28,
     fontWeight: '600',
     color: '#FFFFFF',
     marginBottom: 24,
-    paddingHorizontal: 16,
   },
   buttonContainer: {
     width: '100%',
-    paddingHorizontal: 16,
     gap: 16,
   },
   chip: {
