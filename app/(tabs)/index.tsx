@@ -1,74 +1,134 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { Colors } from '@/constants/Colors';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+interface Match {
+  id: number;
+  title: string;
+  participants: string;
+  dateTime: string;
+  image: string;
+}
 
-export default function HomeScreen() {
+const upcomingMatches: Match[] = [
+  {
+    id: 1,
+    title: 'Golf with Sam and Mike',
+    participants: 'Sam, Mike',
+    dateTime: 'Friday, 8:30 PM',
+    image: 'https://picsum.photos/200',
+  },
+  {
+    id: 2,
+    title: 'Tennis with John and Jeff',
+    participants: 'John, Jeff',
+    dateTime: 'Saturday, 9:30 AM',
+    image: 'https://picsum.photos/201',
+  },
+  {
+    id: 3,
+    title: 'Soccer with Tom and Alex',
+    participants: 'Tom, Alex',
+    dateTime: 'Sunday, 7:30 AM',
+    image: 'https://picsum.photos/202',
+  },
+];
+
+const MatchItem: React.FC<Match> = ({ title, dateTime, image }) => (
+  <TouchableOpacity style={styles.matchItem}>
+    <View style={styles.matchInfo}>
+      <Image source={{ uri: image }} style={styles.avatar} />
+      <View style={styles.matchDetails}>
+        <Text style={styles.matchTitle}>{title}</Text>
+        <Text style={styles.matchDateTime}>{dateTime}</Text>
+      </View>
+    </View>
+    <IconSymbol name="paperplane.fill" size={24} color="#808080" />
+  </TouchableOpacity>
+);
+
+export default function Matches() {
+  const tabBarHeight = useBottomTabBarHeight();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome to Timely!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={{ paddingBottom: tabBarHeight }}
+      >
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Upcoming Matches</Text>
+          {upcomingMatches.map((match) => (
+            <MatchItem key={match.id} {...match} />
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: Colors.dark.background,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  section: {
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  sectionTitle: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 24,
+  },
+  matchItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  matchInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 16,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginRight: 12,
   },
-});
+  matchDetails: {
+    flex: 1,
+  },
+  matchTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  matchDateTime: {
+    fontSize: 14,
+    color: '#808080',
+  },
+}); 
