@@ -2,79 +2,66 @@ import React from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { Colors } from '@/constants/Colors';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
-interface ChatPreview {
+interface Match {
   id: number;
-  name: string;
+  title: string;
+  participants: string;
+  dateTime: string;
   image: string;
-  lastMessage: string;
-  timestamp: string;
 }
 
-const chats: ChatPreview[] = [
+const upcomingMatches: Match[] = [
   {
     id: 1,
-    name: 'Angela M.',
+    title: 'Golf with Sam and Mike',
+    participants: 'Sam, Mike',
+    dateTime: 'Friday, 8:30 PM',
     image: 'https://picsum.photos/200',
-    lastMessage: 'See you at the golf course!',
-    timestamp: '2m ago',
   },
   {
     id: 2,
-    name: 'Benjamin R.',
+    title: 'Tennis with John and Jeff',
+    participants: 'John, Jeff',
+    dateTime: 'Saturday, 9:30 AM',
     image: 'https://picsum.photos/201',
-    lastMessage: "Perfect, I'll bring the tennis balls",
-    timestamp: '15m ago',
   },
   {
     id: 3,
-    name: 'Caroline S.',
+    title: 'Soccer with Tom and Alex',
+    participants: 'Tom, Alex',
+    dateTime: 'Sunday, 7:30 AM',
     image: 'https://picsum.photos/202',
-    lastMessage: 'How about next Saturday?',
-    timestamp: '1h ago',
-  },
-  {
-    id: 4,
-    name: 'Derek L.',
-    image: 'https://picsum.photos/203',
-    lastMessage: 'Great game today!',
-    timestamp: '2h ago',
-  },
-  {
-    id: 5,
-    name: 'Elena W.',
-    image: 'https://picsum.photos/204',
-    lastMessage: 'Looking forward to our match',
-    timestamp: '1d ago',
   },
 ];
 
-const ChatItem: React.FC<ChatPreview> = ({ name, image, lastMessage, timestamp }) => (
-  <TouchableOpacity style={styles.chatItem}>
-    <View style={styles.chatInfo}>
+const MatchItem: React.FC<Match> = ({ title, dateTime, image }) => (
+  <TouchableOpacity style={styles.matchItem}>
+    <View style={styles.matchInfo}>
       <Image source={{ uri: image }} style={styles.avatar} />
-      <View style={styles.messageContainer}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.lastMessage} numberOfLines={1}>{lastMessage}</Text>
+      <View style={styles.matchDetails}>
+        <Text style={styles.matchTitle}>{title}</Text>
+        <Text style={styles.matchDateTime}>{dateTime}</Text>
       </View>
     </View>
-    <Text style={styles.timestamp}>{timestamp}</Text>
+    <IconSymbol name="paperplane.fill" size={24} color="#808080" />
   </TouchableOpacity>
 );
 
-export default function Chat() {
+export default function Matches() {
   const tabBarHeight = useBottomTabBarHeight();
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Chat</Text>
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={{ paddingBottom: tabBarHeight }}
       >
         <View style={styles.section}>
-          {chats.map((chat) => (
-            <ChatItem key={chat.id} {...chat} />
+          <Text style={styles.sectionTitle}>Upcoming Matches</Text>
+          {upcomingMatches.map((match) => (
+            <MatchItem key={match.id} {...match} />
           ))}
         </View>
       </ScrollView>
@@ -87,27 +74,39 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.dark.background,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
   title: {
     fontSize: 32,
     fontWeight: '600',
     color: '#FFFFFF',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 24,
   },
   scrollView: {
     flex: 1,
   },
   section: {
     paddingHorizontal: 16,
+    paddingTop: 24,
   },
-  chatItem: {
+  sectionTitle: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 24,
+  },
+  matchItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  chatInfo: {
+  matchInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
@@ -119,22 +118,17 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     marginRight: 12,
   },
-  messageContainer: {
+  matchDetails: {
     flex: 1,
   },
-  name: {
+  matchTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
     marginBottom: 4,
   },
-  lastMessage: {
+  matchDateTime: {
     fontSize: 14,
     color: '#808080',
   },
-  timestamp: {
-    fontSize: 12,
-    color: '#808080',
-    marginLeft: 8,
-  },
-});
+}); 

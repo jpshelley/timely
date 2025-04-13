@@ -28,8 +28,16 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          title: 'Chat',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="bubble.left.and.bubble.right.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="matches"
+        options={{
           title: 'Matches',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
+          href: null,
         }}
       />
       <Tabs.Screen
@@ -37,6 +45,7 @@ export default function TabLayout() {
         options={{
           title: 'Preference',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
+          href: null,
         }}
       />
       <Tabs.Screen
