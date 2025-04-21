@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { Colors } from '@/constants/Colors';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { CreateEventModal } from '@/components/CreateEventModal';
 
 interface Match {
   id: number;
@@ -51,12 +52,19 @@ const MatchItem: React.FC<Match> = ({ title, dateTime, image }) => (
 
 export default function Matches() {
   const tabBarHeight = useBottomTabBarHeight();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleCreateEvent = (friendId: string) => {
+    // Handle event creation here
+    console.log('Creating event with friend:', friendId);
+    setIsModalVisible(false);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView 
         style={styles.scrollView}
-        contentContainerStyle={{ paddingBottom: tabBarHeight }}
+        contentContainerStyle={{ paddingBottom: tabBarHeight + 80 }}
       >
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Upcoming Matches</Text>
@@ -65,6 +73,19 @@ export default function Matches() {
           ))}
         </View>
       </ScrollView>
+
+      <TouchableOpacity
+        style={[styles.fab, { bottom: tabBarHeight + 16 }]}
+        onPress={() => setIsModalVisible(true)}
+      >
+        <IconSymbol name="plus" size={24} color="#000000" />
+      </TouchableOpacity>
+
+      <CreateEventModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onSend={handleCreateEvent}
+      />
     </SafeAreaView>
   );
 }
@@ -130,5 +151,20 @@ const styles = StyleSheet.create({
   matchDateTime: {
     fontSize: 14,
     color: '#808080',
+  },
+  fab: {
+    position: 'absolute',
+    right: 16,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: Colors.dark.tint,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
   },
 }); 
